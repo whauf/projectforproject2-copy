@@ -1,3 +1,23 @@
+# From the template (keeps token/credential scratch files out of git)
 storage*
 github*
 CLAUDE.md
+
+# Everything the flow writes except plots/: landed API pages, the database, logs, dbt output
+data/
+*.duckdb
+*.duckdb.wal
+logs/
+target/
+dbt_packages/
+.user.yml
+
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.pyc
+.env
+
+# OS files
+.DS_Store

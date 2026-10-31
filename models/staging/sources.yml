@@ -1,0 +1,33 @@
+version: 2
+
+sources:
+  - name: raw
+    description: >
+      Raw GitHub REST records loaded by Task 2 of the Prefect flow. One row per record
+      (not per page), upserted on (repo, id); the full record is kept in `payload`.
+    schema: main
+    tables:
+      - name: raw_commits
+        description: "GET /repos/{r}/commits?since=... One row per commit; id = sha; updated_at = committer date."
+        columns: &raw_columns
+          - name: repo
+            description: "Repository as owner/name."
+          - name: id
+            description: "Natural key of the record (sha, PR number, review id, or release id)."
+          - name: updated_at
+            description: "Record timestamp used for the incremental watermark (UTC)."
+          - name: fetched_at
+            description: "When the landing page holding this record was fetched (UTC)."
+          - name: source_file
+            description: "Landing file under data/raw/ that the row came from."
+          - name: payload
+            description: "The complete record as returned by GitHub (JSON)."
+      - name: raw_pull_requests
+        description: "GET /repos/{r}/pulls?state=all&sort=updated&direction=desc. One row per PR; id = number."
+        columns: *raw_columns
+      - name: raw_pr_reviews
+        description: "GET /repos/{r}/pulls/{number}/reviews for every PR created in the window. id = review id; updated_at = submitted_at."
+        columns: *raw_columns
+      - name: raw_releases
+        description: "GET /repos/{r}/releases (fetched in full). id = release id; updated_at = published_at."
+        columns: *raw_columns

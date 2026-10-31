@@ -2,6 +2,9 @@ package_health:
   outputs:
     dev:
       type: duckdb
-      path: packages.duckdb
-      threads: 1
+      # The flow sets DBT_DUCKDB_PATH to the absolute path of packages.duckdb.
+      path: "{{ env_var('DBT_DUCKDB_PATH', 'packages.duckdb') }}"
+      threads: 4
+      settings:
+        TimeZone: UTC
   target: dev

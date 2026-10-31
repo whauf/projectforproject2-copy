@@ -112,3 +112,40 @@ See the [NYC-Taxi-Monthly](https://sds-prefect.pods.uvarc.io/v2/deployments/depl
 The savvy BSDS student will recognize that some outputs such as plots will not be available since they are built into the remote environment executing the code. This is okay ;^)
 
 (In production the plots would be copied off to remote storage like S3, etc.)
+---
+
+## This project's deployment (`tgc4mz`)
+
+The deployment code is `deploy()` in [main.py](main.py); `python main.py --deploy` runs it. It registers
+`tgc4mz-package-health-flow/tgc4mz-deployment` on the `uvasds-k8s-pool` work pool with a monthly schedule
+(`0 0 28 * *`, midnight America/New_York on the 28th) and these parameters:
+
+| Parameter | Value | Why |
+| --- | --- | --- |
+| `github_token_block` | `tgc4mz-pat` | The worker has no `GITHUB_TOKEN`; the flow loads the PAT from this Secret block at run time. |
+| `pr_source` | `graphql` | A worker pod starts from a clean checkout, so every scheduled run is a full one. GraphQL ingestion keeps that to minutes instead of the hour-plus REST run. |
+
+`job_variables` keeps the CPU and memory values above and adds `EXTRA_PIP_PACKAGES` (built from
+`requirements.txt`), which Prefect's worker images install at start-up, because the flow needs dbt,
+pandas, and matplotlib. The flow writes to `/tmp/package-health` when the checkout is read-only
+(`RUN_DIR` in [pipeline/config.py](pipeline/config.py)).
+
+### Steps
+
+1. Point your local Prefect at the SDS server: activate the `uvasds` profile from the Canvas page
+   (`~/.prefect/profiles.toml`).
+2. Create the Secret block `tgc4mz-pat` in the Prefect UI (Blocks, then **+ New**, then **Secret**). Its value
+   must be a PAT that can read this private repository: a classic token with the `repo` scope, or a
+   fine-grained token with **Contents: Read-only** on this repository.
+3. Push the code to `main` on GitHub (the worker clones `main`).
+4. Register the deployment:
+
+   ```bash
+   python main.py --deploy
+   ```
+
+5. In the Prefect UI, open **Deployments → tgc4mz-deployment** and press **Run**, then copy the run's log below.
+
+### Log of the manually triggered run
+
+_Paste the log of the run started with the **Run** button here._
