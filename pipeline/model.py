@@ -16,7 +16,7 @@ class Metric:
 
 METRICS = [
     Metric("commit_growth_per_year", "Activity", True,
-           "OLS slope of monthly commits over the complete months, x 12, / mean monthly commits"),
+           "OLS slope of weekly commits (capped at the outlier fence) over the complete weeks, x 52, / mean weekly commits"),
     Metric("median_hours_to_first_review", "Responsiveness", False,
            "Median hours from PR creation to the first review by someone other than the author or a bot"),
     Metric("pct_reviewed_within_7d", "Responsiveness", True,
