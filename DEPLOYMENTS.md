@@ -146,6 +146,21 @@ pandas, and matplotlib. The flow writes to `/tmp/package-health` when the checko
 
 5. In the Prefect UI, open **Deployments → tgc4mz-deployment** and press **Run**, then copy the run's log below.
 
+### Registration output
+
+`python main.py --deploy`, run 2026-11-04 against the SDS server:
+
+```
+Successfully created/updated all deployments!
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┓
+┃ Name                                         ┃ Status  ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━┩
+│ tgc4mz-package-health-flow/tgc4mz-deployment │ applied │
+└──────────────────────────────────────────────┴─────────┘
+```
+
+Deployment ID: `09038022-f706-443d-a4d8-d8a86fa82576`.
+
 ### Log of the manually triggered run
 
 _Paste the log of the run started with the **Run** button here._
